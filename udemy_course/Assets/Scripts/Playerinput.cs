@@ -19,7 +19,7 @@ public class Playerinput : MonoBehaviour
             if (hit.collider != null) {
                 if (hit.collider.tag == "Zombie")
                 {
-                    Debug.Log(hit.collider.name);
+                    gameObject.GetComponent<GameMa>().killEnmey();
                 }
             }
         }

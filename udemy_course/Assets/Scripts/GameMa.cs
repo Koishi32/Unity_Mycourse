@@ -13,15 +13,28 @@ public class GameMa : MonoBehaviour
     float riseSpeed;
     [SerializeField]
     float top_limit;
+    [SerializeField]
+    int zombies_Smashed;
+    [SerializeField]
+    int livesRemaining;
+    bool GAME_OVER;
     // Start is called before the first frame update
     void Start()
     {
         pickNewZombie();
+        zombies_Smashed = 0;
+        GAME_OVER = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!GAME_OVER) {
+            revisaZombiees();
+        }
+
+    }
+    public void revisaZombiees (){
         if (isRaising)
         {
             if (zombies[AcctiveZombieIndex].transform.position.y - startPosition.y >= top_limit)
@@ -29,7 +42,8 @@ public class GameMa : MonoBehaviour
                 isRaising = false;
                 isFailing = true;
             }
-            else {
+            else
+            {
                 zombies[AcctiveZombieIndex].transform.Translate(Vector2.up * Time.deltaTime * riseSpeed);
             }
         }
@@ -39,16 +53,23 @@ public class GameMa : MonoBehaviour
             {
                 isRaising = false;
                 isFailing = false;
+                livesRemaining--;// Si no mata zombie baja vida
+                if (livesRemaining == 0)
+                {
+                    GAME_OVER = true;
+                }
             }
-            else {
+            else
+            {
                 zombies[AcctiveZombieIndex].transform.Translate(Vector2.down * Time.deltaTime * riseSpeed);
             }
         }
-        else {
+        else
+        {
             zombies[AcctiveZombieIndex].transform.position = startPosition;
             pickNewZombie();
         }
-        
+
     }
 
     private void pickNewZombie() {
@@ -57,5 +78,10 @@ public class GameMa : MonoBehaviour
         AcctiveZombieIndex = Random.Range(0, zombies.Length);
         startPosition = zombies[AcctiveZombieIndex].transform.position;
     
+    }
+    public void killEnmey() {
+        zombies_Smashed++;
+        zombies[AcctiveZombieIndex].transform.position = startPosition;
+        pickNewZombie();
     }
 }
